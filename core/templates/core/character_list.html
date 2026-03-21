@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Personagens</h2>
+<form method="get" action="{% url 'character-list' %}">
+    <label>Buscar Personagem: <input type="text" name="q" value="{{ request.GET.q }}" /></label>
+    <button type="submit">Buscar</button>
+</form>
+{% if user.is_staff %}
+<p><a href="{% url 'character-create' %}">Criar Personagem</a></p>
+{% endif %}
+<table>
+    <tr><th>Nome</th><th>Nível</th><th>Classe</th><th>Guilda</th><th>Ações</th></tr>
+    {% for character in object_list %}
+        <tr>
+            <td><a href="{% url 'character-detail' character.pk %}">{{ character.name }}</a></td>
+            <td>{{ character.level }}</td>
+            <td>{{ character.character_class }}</td>
+            <td>{{ character.guild }}</td>
+            <td>
+                {% if user.is_staff %}
+                <a href="{% url 'character-update' character.pk %}">Editar</a> |
+                <a href="{% url 'character-delete' character.pk %}">Excluir</a>
+                {% else %}
+                -
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="5">Nenhum personagem cadastrado.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Buscar API Elden Ring (Criaturas)</h2>
+<form method="get" action="{% url 'eldenring-search' %}">
+    <label>Criatura (nome): <input type="text" name="q" value="{{ query }}" /></label>
+    <button type="submit">Buscar</button>
+</form>
+
+{% if errors %}
+    <p class="error">Erro: {{ errors }}</p>
+{% endif %}
+
+{% if query and not results %}
+    <p>Nenhum resultado encontrado para '{{ query }}'.</p>
+{% endif %}
+
+{% if results %}
+    <h3>Resultados para '{{ query }}'</h3>
+    <ul>
+        {% for item in results %}
+            <li>
+                <strong>{{ item.name }}</strong><br />
+                {% if item.image %}<img src="{{ item.image }}" alt="{{ item.name }}" style="max-width:200px;"><br />{% endif %}
+                <small>{{ item.description }}</small><br />
+                <em>Localização: {{ item.location }}</em>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>Projeto Django com CRUD + API Elden Ring</h1>
+<p>Use os links para gerir Guildas, Personagens e buscar dados externos Elden Ring.</p>
+<h2>Instruções rápidas (sem tecnologia)</h2>
+<p>1) Clique em "Login" e entre como admin (por ex. admin/admin123).<br>
+2) Visite guildas ou personagens para ver listagem (qualquer pessoa vê).</p>
+<p>3) Se você for <strong>funcionário</strong> (staff), pode criar/editar/excluir.</p>
+<p>4) Para usar a API diretamente (se quiser):</p>
+<ol>
+  <li>Vá para <code>/api/token/</code> e envie username/password para receber <code>access</code> (token).</li>
+  <li>Use token no cabeçalho: <code>Authorization: Bearer <token></code>.</li>
+  <li>URLs de leitura pública: <code>/api/guilds/</code> (GET), <code>/api/characters/</code> (GET).</li>
+  <li>Para criar/editar/excluir API, você precisa ser <em>is_staff</em>.</li>
+</ol>
+<p>Se estiver usando navegador: sempre use as páginas /guilds/ e /characters/, não a API, a não ser que souber usar token.</p>
+{% endblock %}

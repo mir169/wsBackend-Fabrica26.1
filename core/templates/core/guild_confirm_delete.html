@@ -1,0 +1,7 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Confirma exclusão</h2>
+<p>Tem certeza que deseja excluir {{ object.name }}?</p>
+<form method="post">{% csrf_token %}<button type="submit">Sim, excluir</button></form>
+<p><a href="{% url 'guild-list' %}">Cancelar</a></p>
+{% endblock %}

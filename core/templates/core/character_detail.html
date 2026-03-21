@@ -1,0 +1,7 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>{{ object.name }} (Lv. {{ object.level }})</h2>
+<p>Classe: {{ object.character_class }}</p>
+<p>Guilda: <a href="{% url 'guild-detail' object.guild.pk %}">{{ object.guild.name }}</a></p>
+<p><a href="{% url 'character-update' object.pk %}">Editar</a> | <a href="{% url 'character-delete' object.pk %}">Excluir</a></p>
+{% endblock %}
