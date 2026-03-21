@@ -13,6 +13,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .models import Guild, Character
 from .serializers import GuildSerializer, CharacterSerializer
+from .eldenring_api import EldenRingAPI
 
 
 class IsAdminOrReadOnly(BasePermission):
@@ -131,19 +132,86 @@ def eldenring_search(request):
     query = request.GET.get('q', '')
     results = []
     errors = None
+    api_status = "online"
+
     if query:
         try:
-            response = requests.get('https://eldenring.fanapis.com/api/creatures', params={'name': query}, timeout=10)
-            response.raise_for_status()
-            data = response.json()
-            results = data.get('data', [])
+            results = EldenRingAPI.search_characters(query)
+            if not results:
+                errors = f"Nenhum personagem encontrado com o nome '{query}'."
         except Exception as exc:
-            errors = str(exc)
+            errors = f"Erro ao buscar na API: {str(exc)}"
+            api_status = "offline"
+            # Tentar com dados mock
+            try:
+                results = EldenRingAPI.search_characters(query)
+                if results:
+                    errors = f"API indisponível. Mostrando dados locais para '{query}'."
+            except:
+                errors = f"Erro na API e dados locais indisponíveis para '{query}'."
 
     return render(request, 'core/eldenring_search.html', {
         'query': query,
         'results': results,
         'errors': errors,
+        'api_status': api_status,
+    })
+
+
+def eldenring_characters(request):
+    """View para listar todos os personagens"""
+    characters = []
+    errors = None
+    api_status = "online"
+
+    try:
+        characters = EldenRingAPI.search_characters()  # Sem filtro retorna todos
+    except Exception as exc:
+        errors = f"Erro ao carregar personagens: {str(exc)}"
+        api_status = "offline"
+
+    return render(request, 'core/eldenring_characters.html', {
+        'characters': characters,
+        'errors': errors,
+        'api_status': api_status,
+    })
+
+
+def eldenring_weapons(request):
+    """View para listar armas"""
+    weapons = []
+    errors = None
+    api_status = "online"
+
+    try:
+        weapons = EldenRingAPI.get_weapons()
+    except Exception as exc:
+        errors = f"Erro ao carregar armas: {str(exc)}"
+        api_status = "offline"
+
+    return render(request, 'core/eldenring_weapons.html', {
+        'weapons': weapons,
+        'errors': errors,
+        'api_status': api_status,
+    })
+
+
+def eldenring_bosses(request):
+    """View para listar chefes"""
+    bosses = []
+    errors = None
+    api_status = "online"
+
+    try:
+        bosses = EldenRingAPI.get_bosses()
+    except Exception as exc:
+        errors = f"Erro ao carregar chefes: {str(exc)}"
+        api_status = "offline"
+
+    return render(request, 'core/eldenring_bosses.html', {
+        'bosses': bosses,
+        'errors': errors,
+        'api_status': api_status,
     })
 
 

@@ -26,6 +26,9 @@ urlpatterns = [
     path('characters/<int:pk>/delete/', views.CharacterDeleteView.as_view(), name='character-delete'),
 
     path('eldenring/', views.eldenring_search, name='eldenring-search'),
+    path('eldenring/characters/', views.eldenring_characters, name='eldenring-characters'),
+    path('eldenring/weapons/', views.eldenring_weapons, name='eldenring-weapons'),
+    path('eldenring/bosses/', views.eldenring_bosses, name='eldenring-bosses'),
 
     # API
     path('api/', include(router.urls)),
