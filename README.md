@@ -1,4 +1,4 @@
-# dajngo
+# django elden ring api
 
 Projeto Django Elden Ring CRUD + API
 Este projeto Django demonstra um CRUD completo para Guildas e Personagens, com consumo de API externa do Elden Ring.
