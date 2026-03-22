@@ -3,35 +3,70 @@ version: '3.9'
 services:
   db:
     image: postgres:15-alpine
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: eldendemo
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build:
       context: .
-    command: gunicorn eldendemo.wsgi:application --bind 0.0.0.0:8000
+      dockerfile: dockerfile
+    command: sh -c "python manage.py migrate && gunicorn eldendemo.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     volumes:
       - .:/app
+      - static_files:/app/staticfiles
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       PYTHONUNBUFFERED: 1
-      DJANGO_SECRET_KEY: "django-insecure-CHANGE_ME"
-      DJANGO_DEBUG: 'True'
-      DJANGO_ALLOWED_HOSTS: '0.0.0.0,localhost'
+      DJANGO_SECRET_KEY: "django-insecure-CHANGE_ME_IN_PRODUCTION"
+      DJANGO_DEBUG: 'False'
+      DJANGO_ALLOWED_HOSTS: '0.0.0.0,localhost,127.0.0.1'
       DATABASE_ENGINE: django.db.backends.postgresql
       POSTGRES_DB: eldendemo
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Serviço opcional para desenvolvimento com SQLite
+  web-dev:
+    build:
+      context: .
+      dockerfile: dockerfile
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8000"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DJANGO_SECRET_KEY: "django-insecure-dev-key"
+      DJANGO_DEBUG: 'True'
+      DJANGO_ALLOWED_HOSTS: '0.0.0.0,localhost,127.0.0.1'
+      DATABASE_ENGINE: django.db.backends.sqlite3
+      DATABASE_NAME: /app/db.sqlite3
+    profiles:
+      - dev
 
 volumes:
   postgres_data:
+  static_files:

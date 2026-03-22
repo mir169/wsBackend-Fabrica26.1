@@ -41,15 +41,17 @@ pip install -r requirements.txt
 
 ## Banco de Dados
 
-Por padrão, usa SQLite. Para produção, configure PostgreSQL em `settings.py`:
+Por padrão, usa SQLite. Para produção com Docker, automaticamente usa PostgreSQL.
+
+### Configuração Manual PostgreSQL
 
 ```python
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'elden_demo',
-        'USER': 'seu_usuario',
-        'PASSWORD': 'sua_senha',
+        'NAME': 'eldendemo',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -67,15 +69,104 @@ python manage.py runserver
 
 Acesse: http://127.0.0.1:8000/
 
-## Docker
+## Comandos Rápidos (Makefile)
+
+O projeto inclui um Makefile com comandos úteis:
 
 ```bash
-# Construir e executar
+make help              # Lista todos os comandos disponíveis
+make install           # Instala dependências
+make makemigrations    # Cria migrações
+make migrate           # Aplica migrações
+make createsuperuser   # Cria superusuário
+make runserver         # Inicia servidor local
+make test              # Executa testes
+make clean             # Remove arquivos temporários
+```
+
+## Docker
+
+O projeto inclui configurações Docker completas para desenvolvimento e produção.
+
+### Produção (PostgreSQL)
+
+```bash
+# Construir e executar em produção
 make docker-up
 
 # Ou manualmente
-docker compose up --build
+docker compose up --build -d
 ```
+
+### Desenvolvimento (SQLite)
+
+```bash
+# Executar em modo desenvolvimento (porta 8001)
+make docker-dev-up
+
+# Ou manualmente
+docker compose --profile dev up --build -d
+```
+
+### Comandos Docker Úteis
+
+```bash
+# Ver logs
+make docker-logs
+
+# Parar containers
+make docker-down          # Produção
+make docker-dev-down      # Desenvolvimento
+
+# Construir apenas
+make docker-build
+```
+
+### Configuração Docker
+
+- **Produção**: PostgreSQL + Gunicorn (porta 8000)
+- **Desenvolvimento**: SQLite + Django dev server (porta 8001)
+- **Healthchecks**: Verificação automática de saúde dos serviços
+- **Volumes**: Persistência de dados PostgreSQL e arquivos estáticos
+
+```bash
+# Construir e executar em produção
+make docker-up
+
+# Ou manualmente
+docker compose up --build -d
+```
+
+### Desenvolvimento (SQLite)
+
+```bash
+# Executar em modo desenvolvimento (porta 8001)
+make docker-dev-up
+
+# Ou manualmente
+docker compose --profile dev up --build -d
+```
+
+### Comandos Docker Úteis
+
+```bash
+# Ver logs
+make docker-logs
+
+# Parar containers
+make docker-down          # Produção
+make docker-dev-down      # Desenvolvimento
+
+# Construir apenas
+make docker-build
+```
+
+### Configuração Docker
+
+- **Produção**: PostgreSQL + Gunicorn (porta 8000)
+- **Desenvolvimento**: SQLite + Django dev server (porta 8001)
+- **Healthchecks**: Verificação automática de saúde dos serviços
+- **Volumes**: Persistência de dados PostgreSQL e arquivos estáticos
 
 ## Usuários
 
@@ -106,6 +197,46 @@ docker compose up --build
 - `/api/elden-bosses/` - CRUD Chefes Elden Ring (JWT required para write)
 - `/api/token/` - Obter token JWT
 
+## Desenvolvimento
+
+### Configuração Inicial
+
+```bash
+# Clonar repositório
+git clone <repo-url>
+cd dajngo
+
+# Criar ambiente virtual
+python -m venv myworld
+myworld\Scripts\activate  # Windows
+
+# Instalar dependências
+make install
+
+# Configurar banco
+make migrate
+make createsuperuser
+
+# Executar
+make runserver
+```
+
+### Com Docker
+
+```bash
+# Desenvolvimento rápido
+make docker-dev-up
+
+# Produção
+make docker-up
+```
+
+### Testes
+
+```bash
+make test
+```
+
 ## API Elden Ring - Detalhes
 
 A integração com Elden Ring inclui:
@@ -120,16 +251,38 @@ A integração com Elden Ring inclui:
 
 - **Backend**: Django 6.0.3 + Django REST Framework
 - **Frontend**: Templates HTML + CSS (responsivo)
-- **Banco**: SQLite (dev) / PostgreSQL (prod)
+- **Banco**: SQLite (dev) / PostgreSQL (prod via Docker)
 - **Autenticação**: Sessions (web) + JWT (API)
-- **Container**: Docker + Docker Compose
+- **Container**: Docker + Docker Compose (produção + desenvolvimento)
+- **Servidor**: Gunicorn (produção) / Django dev server (desenvolvimento)
 - **Tema**: Interface dark inspirada em Elden Ring
+- **Build**: Otimizado com .dockerignore e multi-stage
 - **Tratamento de Erros**: Sistema robusto com fallbacks
 - **Templates**: Organizados com herança (base.html)
 
-## Dependências
+## Estrutura do Projeto
 
-- Django 6.0.3
-- Django REST Framework + JWT
-- Requests (para API externa)
-- Psycopg2 (para PostgreSQL)
+```
+dajngo/
+├── core/                          # App principal
+│   ├── migrations/               # Migrações do banco
+│   ├── templates/core/           # Templates HTML
+│   ├── models.py                 # Modelos Django
+│   ├── views.py                  # Views e lógica
+│   ├── urls.py                   # URLs da aplicação
+│   ├── admin.py                  # Configuração admin
+│   ├── serializers.py            # Serializers REST (removido)
+│   └── eldenring_api.py          # Cliente API Elden Ring
+├── eldendemo/                    # Configurações Django
+│   ├── settings.py               # Configurações principais
+│   ├── urls.py                   # URLs do projeto
+│   ├── wsgi.py                   # Configuração WSGI
+│   └── asgi.py                   # Configuração ASGI
+├── dockerfile                    # Dockerfile otimizado
+├── docker-compose.yml            # Configuração Docker
+├── .dockerignore                 # Arquivos ignorados no Docker
+├── requirements.txt              # Dependências Python
+├── Makefile                      # Comandos de automação
+├── manage.py                     # Script Django
+└── README.md                     # Esta documentação
+```
