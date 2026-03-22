@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>{% if object %}Editar Personagem{% else %}Novo Personagem{% endif %} de Elden Ring</h2>
+
+<form method="post" style="max-width: 600px; margin: 0 auto;">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.name.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Nome:</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+            <div style="color: red; font-size: 0.9em;">{{ form.name.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+            <label for="{{ form.race.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Raça:</label>
+            {{ form.race }}
+        </div>
+        <div>
+            <label for="{{ form.gender.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Gênero:</label>
+            {{ form.gender }}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+            <label for="{{ form.location.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Localização:</label>
+            {{ form.location }}
+        </div>
+        <div>
+            <label for="{{ form.role.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Função:</label>
+            {{ form.role }}
+        </div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.description.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Descrição:</label>
+        {{ form.description }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.quote.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Citação:</label>
+        {{ form.quote }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.image_url.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">URL da Imagem:</label>
+        {{ form.image_url }}
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button type="submit" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Salvar</button>
+        <a href="{% url 'elden-character-list' %}" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

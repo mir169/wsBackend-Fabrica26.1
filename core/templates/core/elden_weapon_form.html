@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>{% if object %}Editar Arma{% else %}Nova Arma{% endif %} de Elden Ring</h2>
+
+<form method="post" style="max-width: 600px; margin: 0 auto;">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.name.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Nome:</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+            <div style="color: red; font-size: 0.9em;">{{ form.name.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+            <label for="{{ form.weapon_type.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Tipo de Arma:</label>
+            {{ form.weapon_type }}
+        </div>
+        <div>
+            <label for="{{ form.weight.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Peso:</label>
+            {{ form.weight }}
+        </div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.description.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Descrição:</label>
+        {{ form.description }}
+    </div>
+
+    <fieldset style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+        <legend style="font-weight: bold; padding: 0 10px;">Estatísticas de Ataque</legend>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <div>
+                <label for="{{ form.physical_attack.id_for_label }}" style="display: block; margin-bottom: 3px; font-size: 0.9em;">Ataque Físico:</label>
+                {{ form.physical_attack }}
+            </div>
+            <div>
+                <label for="{{ form.magic_attack.id_for_label }}" style="display: block; margin-bottom: 3px; font-size: 0.9em;">Ataque Mágico:</label>
+                {{ form.magic_attack }}
+            </div>
+            <div>
+                <label for="{{ form.fire_attack.id_for_label }}" style="display: block; margin-bottom: 3px; font-size: 0.9em;">Ataque de Fogo:</label>
+                {{ form.fire_attack }}
+            </div>
+            <div>
+                <label for="{{ form.lightning_attack.id_for_label }}" style="display: block; margin-bottom: 3px; font-size: 0.9em;">Ataque de Raio:</label>
+                {{ form.lightning_attack }}
+            </div>
+            <div style="grid-column: span 2;">
+                <label for="{{ form.holy_attack.id_for_label }}" style="display: block; margin-bottom: 3px; font-size: 0.9em;">Ataque Sagrado:</label>
+                {{ form.holy_attack }}
+            </div>
+        </div>
+    </fieldset>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.image_url.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">URL da Imagem:</label>
+        {{ form.image_url }}
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button type="submit" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Salvar</button>
+        <a href="{% url 'elden-weapon-list' %}" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

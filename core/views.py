@@ -11,8 +11,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .models import Guild, Character
-from .serializers import GuildSerializer, CharacterSerializer
+from .models import EldenCharacter, EldenWeapon, EldenBoss
 from .eldenring_api import EldenRingAPI
 
 
@@ -30,98 +29,6 @@ def logout_view(request):
 
 class HomeView(TemplateView):
     template_name = 'core/home.html'
-
-
-class GuildListView(ListView):
-    model = Guild
-    template_name = 'core/guild_list.html'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        q = self.request.GET.get('q')
-        if q:
-            queryset = queryset.filter(name__icontains=q)
-        return queryset
-
-
-class GuildCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Guild
-    fields = ['name', 'region', 'founded_at']
-    template_name = 'core/guild_form.html'
-    success_url = reverse_lazy('guild-list')
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class GuildDetailView(DetailView):
-    model = Guild
-    template_name = 'core/guild_detail.html'
-
-
-class GuildUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Guild
-    fields = ['name', 'region', 'founded_at']
-    template_name = 'core/guild_form.html'
-    success_url = reverse_lazy('guild-list')
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class GuildDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Guild
-    template_name = 'core/guild_confirm_delete.html'
-    success_url = reverse_lazy('guild-list')
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class CharacterListView(ListView):
-    model = Character
-    template_name = 'core/character_list.html'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        q = self.request.GET.get('q')
-        if q:
-            queryset = queryset.filter(name__icontains=q)
-        return queryset
-
-
-class CharacterCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Character
-    fields = ['name', 'level', 'character_class', 'guild']
-    template_name = 'core/character_form.html'
-    success_url = reverse_lazy('character-list')
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class CharacterDetailView(DetailView):
-    model = Character
-    template_name = 'core/character_detail.html'
-
-
-class CharacterUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Character
-    fields = ['name', 'level', 'character_class', 'guild']
-    template_name = 'core/character_form.html'
-    success_url = reverse_lazy('character-list')
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class CharacterDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Character
-    template_name = 'core/character_confirm_delete.html'
-    success_url = reverse_lazy('character-list')
-
-    def test_func(self):
-        return self.request.user.is_staff
 
 
 class LoginView(LoginView):
@@ -215,13 +122,152 @@ def eldenring_bosses(request):
     })
 
 
-class GuildViewSet(viewsets.ModelViewSet):
-    queryset = Guild.objects.all()
-    serializer_class = GuildSerializer
-    permission_classes = [IsAdminOrReadOnly]
+# CRUD Views para Elden Ring Entities
+
+class EldenCharacterListView(ListView):
+    model = EldenCharacter
+    template_name = 'core/elden_character_list.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        if q:
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
 
 
-class CharacterViewSet(viewsets.ModelViewSet):
-    queryset = Character.objects.all()
-    serializer_class = CharacterSerializer
-    permission_classes = [IsAdminOrReadOnly]
+class EldenCharacterCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = EldenCharacter
+    fields = ['name', 'race', 'gender', 'description', 'quote', 'location', 'role', 'image_url']
+    template_name = 'core/elden_character_form.html'
+    success_url = reverse_lazy('elden-character-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenCharacterDetailView(DetailView):
+    model = EldenCharacter
+    template_name = 'core/elden_character_detail.html'
+
+
+class EldenCharacterUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = EldenCharacter
+    fields = ['name', 'race', 'gender', 'description', 'quote', 'location', 'role', 'image_url']
+    template_name = 'core/elden_character_form.html'
+    success_url = reverse_lazy('elden-character-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenCharacterDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = EldenCharacter
+    template_name = 'core/elden_character_confirm_delete.html'
+    success_url = reverse_lazy('elden-character-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenWeaponListView(ListView):
+    model = EldenWeapon
+    template_name = 'core/elden_weapon_list.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        weapon_type = self.request.GET.get('type')
+        if q:
+            queryset = queryset.filter(name__icontains=q)
+        if weapon_type:
+            queryset = queryset.filter(weapon_type=weapon_type)
+        return queryset
+
+
+class EldenWeaponCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = EldenWeapon
+    fields = ['name', 'weapon_type', 'description', 'weight', 'physical_attack', 'magic_attack',
+              'fire_attack', 'lightning_attack', 'holy_attack', 'image_url']
+    template_name = 'core/elden_weapon_form.html'
+    success_url = reverse_lazy('elden-weapon-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenWeaponDetailView(DetailView):
+    model = EldenWeapon
+    template_name = 'core/elden_weapon_detail.html'
+
+
+class EldenWeaponUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = EldenWeapon
+    fields = ['name', 'weapon_type', 'description', 'weight', 'physical_attack', 'magic_attack',
+              'fire_attack', 'lightning_attack', 'holy_attack', 'image_url']
+    template_name = 'core/elden_weapon_form.html'
+    success_url = reverse_lazy('elden-weapon-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenWeaponDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = EldenWeapon
+    template_name = 'core/elden_weapon_confirm_delete.html'
+    success_url = reverse_lazy('elden-weapon-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenBossListView(ListView):
+    model = EldenBoss
+    template_name = 'core/elden_boss_list.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        location = self.request.GET.get('location')
+        if q:
+            queryset = queryset.filter(name__icontains=q)
+        if location:
+            queryset = queryset.filter(location=location)
+        return queryset
+
+
+class EldenBossCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = EldenBoss
+    fields = ['name', 'location', 'description', 'health', 'rewards', 'image_url']
+    template_name = 'core/elden_boss_form.html'
+    success_url = reverse_lazy('elden-boss-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenBossDetailView(DetailView):
+    model = EldenBoss
+    template_name = 'core/elden_boss_detail.html'
+
+
+class EldenBossUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = EldenBoss
+    fields = ['name', 'location', 'description', 'health', 'rewards', 'image_url']
+    template_name = 'core/elden_boss_form.html'
+    success_url = reverse_lazy('elden-boss-list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class EldenBossDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = EldenBoss
+    template_name = 'core/elden_boss_confirm_delete.html'
+    success_url = reverse_lazy('elden-boss-list')
+
+    def test_func(self):
+        return self.request.user.is_staff

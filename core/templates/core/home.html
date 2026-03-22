@@ -3,14 +3,15 @@
 <h1>Projeto Django com CRUD + API Elden Ring</h1>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
-    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #f8f9fa;">
-        <h2 style="color: #495057;">🏰 Sistema CRUD</h2>
-        <p>Gerencie Guildas e Personagens com operações completas de CRUD (Create, Read, Update, Delete).</p>
+    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%); color: #f5f5dc;">
+        <h2 style="color: #ff6b6b;">⚔️ CRUD Elden Ring (Banco de Dados)</h2>
+        <p>Gerencie seu próprio banco de dados de personagens, armas e chefes de Elden Ring.</p>
         <ul>
-            <li><a href="{% url 'guild-list' %}">Listar Guildas</a></li>
-            <li><a href="{% url 'character-list' %}">Listar Personagens</a></li>
-            <li>Login necessário para criar/editar/excluir</li>
+            <li><a href="{% url 'elden-character-list' %}" style="color: #007bff;">Personagens ER DB</a></li>
+            <li><a href="{% url 'elden-weapon-list' %}" style="color: #007bff;">Armas ER DB</a></li>
+            <li><a href="{% url 'elden-boss-list' %}" style="color: #007bff;">Chefes ER DB</a></li>
         </ul>
+        <p style="font-size: 0.9em; color: #ddd;"><strong>Nota:</strong> Requer login como staff para criar/editar/excluir!</p>
     </div>
 
     <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #fff3cd;">
@@ -29,22 +30,22 @@
 <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
     <h3>🚀 Como usar:</h3>
     <ol>
-        <li><strong>Para CRUD:</strong> Faça login como admin (admin/admin123) para criar/editar dados</li>
-        <li><strong>Para Elden Ring:</strong> Navegue pelas seções sem necessidade de login</li>
+        <li><strong>Para CRUD Elden Ring:</strong> Faça login como admin (admin/admin123) para criar/editar dados de personagens, armas e chefes</li>
+        <li><strong>Para API Elden Ring:</strong> Navegue pelas seções sem necessidade de login</li>
         <li><strong>API Status:</strong> Verde = API online, Amarelo = dados locais (offline)</li>
     </ol>
 </div>
 
 <h2>Instruções rápidas (sem tecnologia)</h2>
 <p>1) Clique em "Login" e entre como admin (por ex. admin/admin123).<br>
-2) Visite guildas ou personagens para ver listagem (qualquer pessoa vê).</p>
+2) Visite as seções "Personagens ER DB", "Armas ER DB" ou "Chefes ER DB" para ver listagem (qualquer pessoa vê).</p>
 <p>3) Se você for <strong>funcionário</strong> (staff), pode criar/editar/excluir.</p>
 <p>4) Para usar a API diretamente (se quiser):</p>
 <ol>
   <li>Vá para <code>/api/token/</code> e envie username/password para receber <code>access</code> (token).</li>
   <li>Use token no cabeçalho: <code>Authorization: Bearer <token></code>.</li>
-  <li>URLs de leitura pública: <code>/api/guilds/</code> (GET), <code>/api/characters/</code> (GET).</li>
+  <li>URLs de leitura pública: <code>/api/elden-characters/</code>, <code>/api/elden-weapons/</code>, <code>/api/elden-bosses/</code> (GET).</li>
   <li>Para criar/editar/excluir API, você precisa ser <em>is_staff</em>.</li>
 </ol>
-<p>Se estiver usando navegador: sempre use as páginas /guilds/ e /characters/, não a API, a não ser que souber usar token.</p>
+<p>Se estiver usando navegador: sempre use as páginas /elden/characters/, /elden/weapons/, /elden/bosses/, não a API, a não ser que souber usar token.</p>
 {% endblock %}

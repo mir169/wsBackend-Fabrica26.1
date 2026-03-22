@@ -1,15 +1,16 @@
-# Django Elden Ring API
+# Django Elden Ring Demo
 
-Projeto Django Elden Ring CRUD + API
-Este projeto Django demonstra um CRUD completo para Guildas e Personagens, com consumo robusto da API do Elden Ring.
+Projeto Django focado exclusivamente em Elden Ring com CRUD completo do banco de dados e consumo de API externa.
 
 ## Funcionalidades
 
-### 🏰 Sistema CRUD
-- **Template Views**: CRUD completo para Guildas e Personagens usando templates HTML com Jinja
-- **Autenticação**: Login/logout para usuários. CRUD restrito a funcionários (is_staff)
-- **Busca**: Campos de busca em listas de Guildas e Personagens
-- **API REST**: Endpoints para Guildas/Personagens com autenticação JWT
+### ⚔️ CRUD Elden Ring (Banco de Dados)
+- **Personagens ER DB**: CRUD completo para personagens de Elden Ring armazenados no banco
+- **Armas ER DB**: CRUD completo para armas de Elden Ring armazenadas no banco
+- **Chefes ER DB**: CRUD completo para chefes de Elden Ring armazenados no banco
+- **Busca e Paginação**: Funcionalidades avançadas em todas as listagens
+- **Admin Interface**: Gerenciamento através do Django Admin
+- **Templates Responsivos**: Interface moderna com tema dark inspirado em Elden Ring
 
 ### ⚔️ API Elden Ring
 - **Busca de Personagens**: Busca específica por nome na API do Elden Ring
@@ -78,8 +79,8 @@ docker compose up --build
 
 ## Usuários
 
-- **Público**: Pode visualizar Guildas/Personagens e explorar API Elden Ring
-- **Funcionários (is_staff)**: Podem criar/editar/excluir Guildas/Personagens
+- **Público**: Pode visualizar dados da API Elden Ring e ver dados do banco Elden Ring
+- **Funcionários (is_staff)**: Podem gerenciar banco de dados Elden Ring (criar/editar/excluir)
 - **Login**: `/login/`, **Logout**: `/logout/`
 - **Admin inicial**: `admin` / `admin123`
 
@@ -87,8 +88,9 @@ docker compose up --build
 
 ### Templates (Interface Web)
 - `/` - Página inicial
-- `/guilds/` - Listar Guildas
-- `/characters/` - Listar Personagens
+- `/elden-characters/` - CRUD Personagens Elden Ring (DB)
+- `/elden-weapons/` - CRUD Armas Elden Ring (DB)
+- `/elden-bosses/` - CRUD Chefes Elden Ring (DB)
 - `/login/` - Login
 - `/logout/` - Logout
 
@@ -99,8 +101,9 @@ docker compose up --build
 - `/eldenring/bosses/` - Chefes temíveis
 
 ### API REST (JSON)
-- `/api/guilds/` - CRUD Guildas (JWT required para write)
-- `/api/characters/` - CRUD Personagens (JWT required para write)
+- `/api/elden-characters/` - CRUD Personagens Elden Ring (JWT required para write)
+- `/api/elden-weapons/` - CRUD Armas Elden Ring (JWT required para write)
+- `/api/elden-bosses/` - CRUD Chefes Elden Ring (JWT required para write)
 - `/api/token/` - Obter token JWT
 
 ## API Elden Ring - Detalhes
@@ -120,10 +123,13 @@ A integração com Elden Ring inclui:
 - **Banco**: SQLite (dev) / PostgreSQL (prod)
 - **Autenticação**: Sessions (web) + JWT (API)
 - **Container**: Docker + Docker Compose
-Tratamento de erros.
-Templates organizados com base.html.
-Dependências
-Django 6.0.3
-DRF + JWT
-Requests
-Psycopg2 (para PostgreSQL)
+- **Tema**: Interface dark inspirada em Elden Ring
+- **Tratamento de Erros**: Sistema robusto com fallbacks
+- **Templates**: Organizados com herança (base.html)
+
+## Dependências
+
+- Django 6.0.3
+- Django REST Framework + JWT
+- Requests (para API externa)
+- Psycopg2 (para PostgreSQL)

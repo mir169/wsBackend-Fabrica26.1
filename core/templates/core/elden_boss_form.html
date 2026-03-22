@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>{% if object %}Editar{% else %}Novo{% endif %} Chefe de Elden Ring</h2>
+
+<form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: 0 auto;">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.name.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Nome:</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.name.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.description.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Descrição:</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.description.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.location.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Localização:</label>
+        {{ form.location }}
+        {% if form.location.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.location.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.health.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Vida:</label>
+        {{ form.health }}
+        {% if form.health.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.health.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.rewards.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Recompensas (uma por linha):</label>
+        {{ form.rewards }}
+        {% if form.rewards.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.rewards.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.image_url.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">URL da Imagem:</label>
+        {{ form.image_url }}
+        {% if form.image_url.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.image_url.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.api_id.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">ID da API:</label>
+        {{ form.api_id }}
+        {% if form.api_id.errors %}
+            <div style="color: #dc3545; font-size: 0.9em;">{{ form.api_id.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button type="submit" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            {% if object %}Salvar Alterações{% else %}Criar Chefe{% endif %}
+        </button>
+        <a href="{% url 'elden-boss-list' %}" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Cancelar</a>
+    </div>
+</form>
+{% endblock %}
